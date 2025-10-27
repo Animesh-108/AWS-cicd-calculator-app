@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      # Matches the Java 11 in your pom.xml
+      java: corretto11
+  build:
+    commands:
+      # This single command compiles, runs tests, and creates the .jar
+      - echo "Running Maven package..."
+      - mvn package
+  
+artifacts:
+  files:
+    # Looks for the correct .jar file
+    - 'target/maven-calculator-1.0-SNAPSHOT.jar'
+    # Includes the deployment files needed for the next stage
+    - 'appspec.yml'
+    - 'scripts/*'
