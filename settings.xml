@@ -16,7 +16,7 @@
       <repositories>
         <repository>
           <id>my-company-domain-calculator-repo</id>
-          <url>https://my-company-domain-YOUR_ACCOUNT_ID.d.codeartifact.YOUR_REGION.amazonaws.com/maven/calculator-repo/</url>
+          <url>https://my-company-domain-913402646946.d.codeartifact.us-east-1.amazonaws.com/maven/calculator-repo/</url>
           <releases><enabled>true</enabled></releases>
           <snapshots><enabled>true</enabled></snapshots>
         </repository>
