@@ -3,18 +3,22 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      # Matches the Java 11 in your pom.xml
       java: corretto11
+  pre_build:
+    commands:
+      # Log in to CodeArtifact
+      - export AWS_ACCOUNT_ID="YOUR_ACCOUNT_ID"
+      - export AWS_REGION="YOUR_REGION"
+      - export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain my-company-domain --domain-owner $AWS_ACCOUNT_ID --region $AWS_REGION --query authorizationToken --output text`
   build:
     commands:
-      # This single command compiles, runs tests, and creates the .jar
+      # Use the settings.xml file to get dependencies from CodeArtifact
       - echo "Running Maven package..."
-      - mvn package
+      - mvn package -s settings.xml
   
 artifacts:
   files:
-    # Looks for the correct .jar file
     - 'target/maven-calculator-1.0-SNAPSHOT.jar'
-    # Includes the deployment files needed for the next stage
     - 'appspec.yml'
     - 'scripts/*'
+    - 'infrastructure.yml' # Also add our new template as an artifact
