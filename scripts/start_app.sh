@@ -7,4 +7,4 @@ chown -R ec2-user:ec2-user /opt/calculator
 # We will run '100 + 50' and save the output to a log file
 cd /opt/calculator
 # TO:
-java -jar maven-calculator-1.0-SNAPSHOT.jar 100 + 50 > /opt/calculator/last_run.log 2>&1
+java -jar maven-calculator-1.0-SNAPSHOT.jar 200 + 1 > /opt/calculator/last_run.log 2>&1
