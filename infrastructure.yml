@@ -9,7 +9,7 @@ Parameters:
 
 Resources:
   # 1. The IAM Role for the EC2 Instance (what we did manually)
-  EC2InstanceRole:
+ 
     Type: 'AWS::IAM::Role'
     Properties:
       AssumeRolePolicyDocument:
@@ -20,9 +20,8 @@ Resources:
               Service: ec2.amazonaws.com
             Action: 'sts:AssumeRole'
       ManagedPolicyArns:
-        # This is the policy CodeDeploy needs
-        - 'arn:aws:iam::aws:policy/AmazonEC2RoleforAWSCodeDeploy'
-
+        # This policy allows the EC2 agent to pull the deployment from S3
+        - 'arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess'
   # 2. The Instance Profile to attach the role
   EC2InstanceProfile:
     Type: 'AWS::IAM::InstanceProfile'
