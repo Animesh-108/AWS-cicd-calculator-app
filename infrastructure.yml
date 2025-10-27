@@ -6,6 +6,12 @@ Parameters:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Description: The latest Amazon Linux 2 AMI.
     Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+  
+  # --- NEW SECTION ---
+  # This parameter lets you type in your key pair name
+  KeyName:
+    Type: 'AWS::EC2::KeyPair::KeyName'
+    Description: 'Name of an existing EC2 KeyPair to enable SSH access.'
 
 Resources:
   # 1. The IAM Role for the EC2 Instance
@@ -20,7 +26,6 @@ Resources:
               Service: ec2.amazonaws.com
             Action: 'sts:AssumeRole'
       ManagedPolicyArns:
-        # This policy allows the EC2 agent to pull the deployment from S3
         - 'arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess'
 
   # 2. The Instance Profile to attach the role
@@ -36,7 +41,6 @@ Resources:
     Properties:
       GroupDescription: 'Allow SSH'
       SecurityGroupIngress:
-        # Allow SSH (Port 22) from any IP
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
@@ -52,20 +56,18 @@ Resources:
       SecurityGroupIds:
         - !Ref WebServerSecurityGroup
       
-      # This is the critical tag CodeDeploy uses to find the instance
+      # --- NEW LINE ---
+      # This attaches your key pair to the instance
+      KeyName: !Ref KeyName
+
       Tags:
         - Key: App
           Value: Calculator
-      
-      # This script runs on first boot to install our software
       UserData:
         Fn::Base64: |
           #!/bin/bash
-          # Update and install Java 11
           yum update -y
           amazon-linux-extras install java-openjdk11 -y
-          
-          # Install the CodeDeploy Agent
           yum install -y ruby wget
           cd /home/ec2-user
           wget https://aws-codedeploy-us-east-1.s3.us-east-1.amazonaws.com/latest/install
