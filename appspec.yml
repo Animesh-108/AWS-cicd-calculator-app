@@ -1,0 +1,30 @@
+version: 0.0
+os: linux
+
+files:
+  # Copy the JAR file built by your pom.xml
+  - source: /target/maven-calculator-1.0-SNAPSHOT.jar
+    # Deploy it to a simple folder on the server
+    destination: /opt/calculator
+  
+  # Copy the helper scripts
+  - source: /scripts/start_app.sh
+    destination: /opt/calculator/scripts
+  - source: /scripts/stop_app.sh
+    destination: /opt/calculator/scripts
+
+hooks:
+  # Run the simple cleanup script
+  BeforeInstall:
+    - location: scripts/stop_app.sh
+      timeout: 300
+      runas: root
+  # Run the script that tests your Main.java
+  ApplicationStart:
+    - location: scripts/start_app.sh
+      timeout: 300
+      runas: root
+permissions:
+  - object: /opt/calculator
+    owner: ec2-user
+    group: ec2-user
