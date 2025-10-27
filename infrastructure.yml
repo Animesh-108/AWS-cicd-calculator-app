@@ -8,8 +8,8 @@ Parameters:
     Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
 
 Resources:
-  # 1. The IAM Role for the EC2 Instance (what we did manually)
- 
+  # 1. The IAM Role for the EC2 Instance
+  EC2InstanceRole:
     Type: 'AWS::IAM::Role'
     Properties:
       AssumeRolePolicyDocument:
@@ -22,6 +22,7 @@ Resources:
       ManagedPolicyArns:
         # This policy allows the EC2 agent to pull the deployment from S3
         - 'arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess'
+
   # 2. The Instance Profile to attach the role
   EC2InstanceProfile:
     Type: 'AWS::IAM::InstanceProfile'
